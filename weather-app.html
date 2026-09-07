@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skyline — Weather</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <main class="card">
+
+    <!-- SEARCH: hook up id="city-search-input" (value) and id="city-search-btn" (click) via JS -->
+    <div class="search-row">
+      <input type="text" class="search-input" id="city-search-input" placeholder="Search city...">
+      <button class="search-btn" id="city-search-btn" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#131C33" stroke-width="2.4" stroke-linecap="round">
+          <circle cx="10.5" cy="10.5" r="6.5" />
+          <line x1="20" y1="20" x2="15.3" y2="15.3" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- HEADER: hook up id="location-name" / id="location-date" via JS -->
+    <div class="location-row">
+      <span class="location-name" id="location-name">Karachi, Pakistan</span>
+      <span class="location-date" id="location-date">Mon, 7 Sep</span>
+    </div>
+
+    <!-- HERO: hook up id="weather-icon" (swap svg) and id="temp-value" / id="condition-text" -->
+    <div class="hero">
+      <div class="hero-icon" id="weather-icon">
+        <!-- partly-cloudy icon -->
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="38" r="20" fill="#E8A94C" />
+          <path
+            d="M30 60c-11 0-20 8.5-20 19s9 19 20 19h38c9.4 0 17-7.2 17-16.2 0-8-6-14.8-13.9-16-1.4-9.7-9.9-17-20.1-17-6.6 0-12.5 3-16.3 7.7"
+            fill="#F5F1E8" opacity="0.92" />
+        </svg>
+      </div>
+      <div class="hero-temp">
+        <div class="temp-value" id="temp-value">27<sup>°</sup></div>
+        <div class="condition-text" id="condition-text">Partly cloudy</div>
+      </div>
+    </div>
+
+    <!-- STATS: hook up id="feels-like" / id="humidity" / id="wind-speed" -->
+    <div class="stats-row">
+      <div>
+        <div class="stat-label">Feels like</div>
+        <div class="stat-value" id="feels-like">29°</div>
+      </div>
+      <div>
+        <div class="stat-label">Humidity</div>
+        <div class="stat-value" id="humidity">61%</div>
+      </div>
+      <div>
+        <div class="stat-label">Wind</div>
+        <div class="stat-value" id="wind-speed">14 m/s</div>
+      </div>
+    </div>
+  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <div class="empty-hint">Search City And Explore Weather.</div>
+
+  </main>
+
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root {
+    --dusk-navy: #131C33;
+    --deep-shadow: #0A1120;
+    --mist-blue: #8CA0BE;
+    --gold: #E8A94C;
+    --cloud: #F5F1E8;
+    --cloud-dim: rgba(245, 241, 232, 0.62);
+    --hairline: rgba(245, 241, 232, 0.14);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    font-family: 'Manrope', sans-serif;
+    color: var(--cloud);
+    background:
+        radial-gradient(circle at 82% 8%, rgba(232, 169, 76, 0.35), transparent 40%),
+        radial-gradient(circle at 12% 90%, rgba(140, 160, 190, 0.18), transparent 45%),
+        linear-gradient(180deg, var(--deep-shadow) 0%, var(--dusk-navy) 55%, #1B2846 100%);
+}
+
+/* faint stars, purely decorative */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        radial-gradient(1.5px 1.5px at 20% 20%, rgba(245, 241, 232, 0.5) 50%, transparent 51%),
+        radial-gradient(1.5px 1.5px at 75% 12%, rgba(245, 241, 232, 0.4) 50%, transparent 51%),
+        radial-gradient(1px 1px at 60% 30%, rgba(245, 241, 232, 0.3) 50%, transparent 51%),
+        radial-gradient(1px 1px at 35% 65%, rgba(245, 241, 232, 0.35) 50%, transparent 51%),
+        radial-gradient(1.5px 1.5px at 90% 55%, rgba(245, 241, 232, 0.3) 50%, transparent 51%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 380px;
+    background: rgba(245, 241, 232, 0.06);
+    border: 1px solid var(--hairline);
+    border-radius: 28px;
+    backdrop-filter: blur(18px);
+    padding: 28px 26px 8px;
+    overflow: hidden;
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(232, 169, 76, 0.28), transparent 70%);
+    pointer-events: none;
+}
+
+/* ---------- search ---------- */
+.search-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 22px;
+}
+
+.search-input {
+    flex: 1;
+    background: rgba(245, 241, 232, 0.07);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    color: var(--cloud);
+}
+
+.search-input::placeholder {
+    color: var(--cloud-dim);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+.search-btn {
+    flex: 0 0 auto;
+    width: 40px;
+    background: var(--gold);
+    border: none;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.search-btn svg {
+    width: 17px;
+    height: 17px;
+}
+
+/* ---------- header ---------- */
+.location-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.location-name {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+.location-date {
+    font-size: 12px;
+    color: var(--cloud-dim);
+}
+
+/* ---------- hero ---------- */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 22px;
+}
+
+.hero-icon svg {
+    width: 92px;
+    height: 92px;
+}
+
+.hero-temp {
+    text-align: right;
+}
+
+.temp-value {
+    font-family: 'Fraunces', serif;
+    font-size: 76px;
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -2px;
+}
+
+.temp-value sup {
+    font-size: 32px;
+    top: -0.5em;
+    font-weight: 400;
+}
+
+.condition-text {
+    margin-top: 6px;
+    font-size: 14px;
+    color: var(--cloud-dim);
+}
+
+/* ---------- stats row ---------- */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin-top: 26px;
+    padding: 16px 2px;
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+}
+
+.stat-label {
+    font-size: 10px;
+    color: var(--cloud-dim);
+    letter-spacing: 0.3px;
+}
+
+.stat-value {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 3px;
+}
+
+.empty-hint {
+    text-align: center;
+    font-size: 12px;
+    color: var(--cloud-dim);
+    padding: 4px 0 24px;
+}
+
+@media (max-width: 400px) {
+    .temp-value {
+        font-size: 64px;
+    }
+
+    .hero-icon svg {
+        width: 76px;
+        height: 76px;
+    }
+}
