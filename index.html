@@ -8,67 +8,152 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
+<!--
+  BACKGROUND HOOKS (JS se set karo):
+  document.body.dataset.weather = clear | clouds | rain | drizzle | thunderstorm | snow | mist
+  document.body.dataset.time    = day | night
+  (API: weather[0].main aur weather[0].icon ka last letter 'd' / 'n')
+-->
+
 <body>
 
-  <main class="card">
+  <div class="app">
 
-    <!-- SEARCH: hook up id="city-search-input" (value) and id="city-search-btn" (click) via JS -->
-    <div class="search-row">
-      <input type="text" class="search-input" id="city-search-input" placeholder="Search city...">
-      <button class="search-btn" id="city-search-btn" aria-label="Search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#131C33" stroke-width="2.4" stroke-linecap="round">
-          <circle cx="10.5" cy="10.5" r="6.5" />
-          <line x1="20" y1="20" x2="15.3" y2="15.3" />
-        </svg>
-      </button>
-    </div>
-
-    <!-- HEADER: hook up id="location-name" / id="location-date" via JS -->
-    <div class="location-row">
-      <span class="location-name" id="location-name">Karachi, Pakistan</span>
-      <span class="location-date" id="location-date">Mon, 7 Sep</span>
-    </div>
-
-    <!-- HERO: hook up id="weather-icon" (swap svg) and id="temp-value" / id="condition-text" -->
-    <div class="hero">
-      <div class="hero-icon" id="weather-icon">
-        <!-- partly-cloudy icon -->
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="40" cy="38" r="20" fill="#E8A94C" />
-          <path
-            d="M30 60c-11 0-20 8.5-20 19s9 19 20 19h38c9.4 0 17-7.2 17-16.2 0-8-6-14.8-13.9-16-1.4-9.7-9.9-17-20.1-17-6.6 0-12.5 3-16.3 7.7"
-            fill="#F5F1E8" opacity="0.92" />
-        </svg>
+    <!-- SEARCH (alag section) -->
+    <section class="search-card">
+      <div class="search-row">
+        <input type="text" class="search-input" id="city-search-input" placeholder="Search city..." autocomplete="off">
+        <button class="search-btn" id="city-search-btn">Search</button>
       </div>
-      <div class="hero-temp">
-        <div class="temp-value" id="temp-value">27<sup>°</sup></div>
-        <div class="condition-text" id="condition-text">Partly cloudy</div>
+    </section>
+
+    <!-- WEATHER DETAILS (alag section) -->
+    <main class="card">
+
+      <!-- HEADER -->
+      <div class="location-row">
+        <span class="location-name" id="location-name">Karachi, Pakistan</span>
+        <span class="location-date" id="location-date">Mon, 7 Sep</span>
       </div>
-    </div>
 
-    <!-- STATS: hook up id="feels-like" / id="humidity" / id="wind-speed" -->
-    <div class="stats-row">
-      <div>
-        <div class="stat-label">Feels like</div>
-        <div class="stat-value" id="feels-like">29°</div>
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-icon" id="weather-icon">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="38" r="20" fill="#E8A94C" />
+            <path
+              d="M30 60c-11 0-20 8.5-20 19s9 19 20 19h38c9.4 0 17-7.2 17-16.2 0-8-6-14.8-13.9-16-1.4-9.7-9.9-17-20.1-17-6.6 0-12.5 3-16.3 7.7"
+              fill="#F5F1E8" opacity="0.92" />
+          </svg>
+        </div>
+        <div class="hero-temp">
+          <div class="temp-value" id="temp-value">27<sup>°</sup></div>
+          <div class="condition-text" id="condition-text">Partly cloudy</div>
+          <!-- API: main.temp_max / main.temp_min -->
+          <div class="temp-range">
+            <span>High <b id="temp-max">31°</b></span>
+            <span>Low <b id="temp-min">24°</b></span>
+          </div>
+        </div>
       </div>
-      <div>
-        <div class="stat-label">Humidity</div>
-        <div class="stat-value" id="humidity">61%</div>
+
+      <!-- STATS (original 3) -->
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-label">Feels like</div>
+          <div class="stat-value" id="feels-like">29°</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Humidity</div>
+          <div class="stat-value" id="humidity">61%</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Wind</div>
+          <div class="stat-value" id="wind-speed">14 m/s</div>
+        </div>
       </div>
-      <div>
-        <div class="stat-label">Wind</div>
-        <div class="stat-value" id="wind-speed">14 m/s</div>
+
+      <!-- DETAILS: API ke extra fields -->
+      <div class="details-grid">
+
+        <!-- main.pressure (hPa) -->
+        <div class="detail">
+          <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 16a8 8 0 1 1 16 0" />
+            <path d="M12 16l4-5" />
+          </svg>
+          <div>
+            <div class="detail-label">Pressure</div>
+            <div class="detail-value" id="pressure">1008 hPa</div>
+          </div>
+        </div>
+
+        <!-- visibility (meters → km) -->
+        <div class="detail">
+          <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          <div>
+            <div class="detail-label">Visibility</div>
+            <div class="detail-value" id="visibility">8 km</div>
+          </div>
+        </div>
+
+        <!-- clouds.all (%) -->
+        <div class="detail">
+          <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 18a4 4 0 0 1-.5-7.97A5.5 5.5 0 0 1 17 8.5a4.75 4.75 0 0 1 .5 9.5z" />
+          </svg>
+          <div>
+            <div class="detail-label">Cloudiness</div>
+            <div class="detail-value" id="cloudiness">40%</div>
+          </div>
+        </div>
+
+        <!-- wind.deg (degrees → direction) + wind.gust (optional) -->
+        <div class="detail">
+          <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M15.5 8.5l-2 5-5 2 2-5z" />
+          </svg>
+          <div>
+            <div class="detail-label">Wind direction</div>
+            <div class="detail-value" id="wind-direction">SW 230°</div>
+          </div>
+        </div>
+
+        <div class="detail" id="wind-gust-box">
+          <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 8h10a3 3 0 1 0-3-3" />
+            <path d="M3 12h15a3 3 0 1 1-3 3" />
+            <path d="M3 16h6" />
+          </svg>
+          <div>
+            <div class="detail-label">Wind gust</div>
+            <div class="detail-value" id="wind-gust">18 m/s</div>
+          </div>
+        </div>
+
       </div>
-    </div>
-  
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <div class="empty-hint">Search City And Explore Weather.</div>
+      <!-- LOCAL TIME: timezone (seconds offset) se -->
+      <div class="meta-row">
+        <span>Local time <b id="local-time">3:42 PM</b></span>
+      </div>
 
-  </main>
+      <div class="empty-hint">Search City And Explore Weather.</div>
 
+    </main>
 
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="script.js"></script>
 
 </body>

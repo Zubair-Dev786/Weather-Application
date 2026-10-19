@@ -1,13 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Manrope:wght@400;500;600;700&display=swap');
 
+/* animatable colors: weather change par background smoothly badlega */
+@property --bg-top {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #0A1120;
+}
+
+@property --bg-mid {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #131C33;
+}
+
+@property --bg-bottom {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #1B2846;
+}
+
+@property --glow {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: rgba(232, 169, 76, 0.35);
+}
+
 :root {
     --dusk-navy: #131C33;
     --deep-shadow: #0A1120;
     --mist-blue: #8CA0BE;
     --gold: #E8A94C;
     --cloud: #F5F1E8;
-    --cloud-dim: rgba(245, 241, 232, 0.62);
+    --cloud-dim: rgba(245, 241, 232, 0.66);
     --hairline: rgba(245, 241, 232, 0.14);
+    --panel: rgba(245, 241, 232, 0.06);
+
+    --bg-top: #0A1120;
+    --bg-mid: #131C33;
+    --bg-bottom: #1B2846;
+    --glow: rgba(232, 169, 76, 0.35);
+    --stars: 1;
+}
+
+[hidden] {
+    display: none !important;
 }
 
 * {
@@ -16,6 +52,7 @@
     padding: 0;
 }
 
+/* ================= BACKGROUND ================= */
 body {
     min-height: 100vh;
     display: flex;
@@ -25,16 +62,20 @@ body {
     font-family: 'Manrope', sans-serif;
     color: var(--cloud);
     background:
-        radial-gradient(circle at 82% 8%, rgba(232, 169, 76, 0.35), transparent 40%),
+        radial-gradient(circle at 82% 8%, var(--glow), transparent 42%),
         radial-gradient(circle at 12% 90%, rgba(140, 160, 190, 0.18), transparent 45%),
-        linear-gradient(180deg, var(--deep-shadow) 0%, var(--dusk-navy) 55%, #1B2846 100%);
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 55%, var(--bg-bottom) 100%);
+    background-attachment: fixed;
+    transition: --bg-top 1s, --bg-mid 1s, --bg-bottom 1s, --glow 1s;
 }
 
-/* faint stars, purely decorative */
+/* stars (sirf raat mein) */
 body::before {
     content: "";
     position: fixed;
     inset: 0;
+    opacity: var(--stars);
+    transition: opacity 1s;
     background-image:
         radial-gradient(1.5px 1.5px at 20% 20%, rgba(245, 241, 232, 0.5) 50%, transparent 51%),
         radial-gradient(1.5px 1.5px at 75% 12%, rgba(245, 241, 232, 0.4) 50%, transparent 51%),
@@ -45,16 +86,253 @@ body::before {
     z-index: 0;
 }
 
-.card {
+/* weather effect layer (rain / snow / clouds) */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 1s;
+}
+
+/* --- time of day --- */
+body[data-time="day"] {
+    --bg-top: #1C3C6B;
+    --bg-mid: #2D5A94;
+    --bg-bottom: #4A7BB0;
+    --glow: rgba(255, 200, 110, 0.55);
+    --stars: 0;
+}
+
+/* --- weather: night versions (default time) --- */
+body[data-weather="clouds"] {
+    --bg-top: #121A2B;
+    --bg-mid: #1E293D;
+    --bg-bottom: #2C3A52;
+    --glow: rgba(140, 160, 190, 0.28);
+    --stars: 0.25;
+}
+
+body[data-weather="rain"],
+body[data-weather="drizzle"] {
+    --bg-top: #0A111C;
+    --bg-mid: #142234;
+    --bg-bottom: #1F3249;
+    --glow: rgba(120, 160, 210, 0.22);
+    --stars: 0;
+}
+
+body[data-weather="thunderstorm"] {
+    --bg-top: #070B14;
+    --bg-mid: #14182B;
+    --bg-bottom: #25213D;
+    --glow: rgba(170, 140, 230, 0.28);
+    --stars: 0;
+}
+
+body[data-weather="snow"] {
+    --bg-top: #1A2538;
+    --bg-mid: #2B3A52;
+    --bg-bottom: #43566F;
+    --glow: rgba(210, 225, 245, 0.30);
+    --stars: 0;
+}
+
+body[data-weather="mist"] {
+    --bg-top: #1B2230;
+    --bg-mid: #2E3646;
+    --bg-bottom: #454E5F;
+    --glow: rgba(200, 205, 215, 0.25);
+    --stars: 0;
+}
+
+/* --- weather: day versions --- */
+body[data-time="day"][data-weather="clouds"] {
+    --bg-top: #3A4B66;
+    --bg-mid: #52647F;
+    --bg-bottom: #6E8099;
+    --glow: rgba(235, 235, 235, 0.30);
+}
+
+body[data-time="day"][data-weather="rain"],
+body[data-time="day"][data-weather="drizzle"] {
+    --bg-top: #26364A;
+    --bg-mid: #35495F;
+    --bg-bottom: #4A6079;
+    --glow: rgba(180, 200, 225, 0.25);
+}
+
+body[data-time="day"][data-weather="thunderstorm"] {
+    --bg-top: #1D2238;
+    --bg-mid: #2E3350;
+    --bg-bottom: #433F63;
+}
+
+body[data-time="day"][data-weather="snow"] {
+    --bg-top: #4C6483;
+    --bg-mid: #6A84A3;
+    --bg-bottom: #8EA6C0;
+    --glow: rgba(255, 255, 255, 0.40);
+}
+
+body[data-time="day"][data-weather="mist"] {
+    --bg-top: #48546A;
+    --bg-mid: #66728A;
+    --bg-bottom: #8791A4;
+}
+
+/* --- effects --- */
+body[data-weather="rain"]::after,
+body[data-weather="drizzle"]::after,
+body[data-weather="thunderstorm"]::after {
+    opacity: 1;
+    background-image: repeating-linear-gradient(105deg,
+            transparent 0 14px,
+            rgba(200, 220, 245, 0.16) 14px 15px,
+            transparent 15px 34px);
+    background-size: 120px 120px;
+    animation: rain-fall 0.7s linear infinite;
+}
+
+body[data-weather="drizzle"]::after {
+    opacity: 0.5;
+    animation-duration: 1.1s;
+}
+
+body[data-weather="snow"]::after {
+    opacity: 0.9;
+    background-image:
+        radial-gradient(3px 3px at 20px 30px, #fff 50%, transparent 52%),
+        radial-gradient(2px 2px at 90px 80px, #fff 50%, transparent 52%),
+        radial-gradient(3px 3px at 150px 20px, #fff 50%, transparent 52%),
+        radial-gradient(2px 2px at 60px 140px, #fff 50%, transparent 52%);
+    background-size: 180px 180px;
+    animation: snow-fall 9s linear infinite;
+}
+
+body[data-weather="clouds"]::after {
+    opacity: 1;
+    background:
+        radial-gradient(ellipse 340px 90px at 20% 18%, rgba(245, 241, 232, 0.07), transparent 70%),
+        radial-gradient(ellipse 420px 110px at 80% 40%, rgba(245, 241, 232, 0.06), transparent 70%),
+        radial-gradient(ellipse 380px 100px at 35% 78%, rgba(245, 241, 232, 0.06), transparent 70%);
+}
+
+body[data-weather="mist"]::after {
+    opacity: 1;
+    background: linear-gradient(180deg, transparent 30%, rgba(245, 241, 232, 0.10) 70%, transparent 100%);
+}
+
+@keyframes rain-fall {
+    to {
+        background-position: -30px 120px;
+    }
+}
+
+@keyframes snow-fall {
+    to {
+        background-position: 40px 180px;
+    }
+}
+
+/* ================= LAYOUT ================= */
+.app {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 380px;
-    background: rgba(245, 241, 232, 0.06);
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* ---------- search ---------- */
+.search-card {
+    background: var(--panel);
+    border: 1px solid var(--hairline);
+    border-radius: 20px;
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    padding: 10px;
+}
+
+.search-row {
+    display: flex;
+    gap: 8px;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 0;
+    background: rgba(245, 241, 232, 0.07);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    color: var(--cloud);
+    transition: border-color .2s;
+}
+
+.search-input::placeholder {
+    color: var(--cloud-dim);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+.search-btn {
+    flex: 0 0 auto;
+    padding: 0 26px;
+    background: linear-gradient(180deg, #F2BC66 0%, #E8A94C 55%, #D99636 100%);
+    color: var(--deep-shadow);
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.45),
+        0 6px 18px rgba(232, 169, 76, 0.35);
+    transition: transform .18s, box-shadow .18s, filter .18s;
+}
+
+.search-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        0 10px 24px rgba(232, 169, 76, 0.45);
+}
+
+.search-btn:active {
+    transform: translateY(1px) scale(0.97);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 3px 10px rgba(232, 169, 76, 0.3);
+}
+
+.search-btn:focus-visible {
+    outline: 2px solid var(--cloud);
+    outline-offset: 2px;
+}
+
+/* ---------- weather card ---------- */
+.card {
+    position: relative;
+    width: 100%;
+    background: var(--panel);
     border: 1px solid var(--hairline);
     border-radius: 28px;
+    -webkit-backdrop-filter: blur(18px);
     backdrop-filter: blur(18px);
-    padding: 28px 26px 8px;
+    padding: 28px 24px 6px;
     overflow: hidden;
 }
 
@@ -69,59 +347,15 @@ body::before {
     pointer-events: none;
 }
 
-/* ---------- search ---------- */
-.search-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 22px;
-}
-
-.search-input {
-    flex: 1;
-    background: rgba(245, 241, 232, 0.07);
-    border: 1px solid var(--hairline);
-    border-radius: 12px;
-    padding: 11px 14px;
-    font-family: 'Manrope', sans-serif;
-    font-size: 13px;
-    color: var(--cloud);
-}
-
-.search-input::placeholder {
-    color: var(--cloud-dim);
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: var(--gold);
-}
-
-.search-btn {
-    flex: 0 0 auto;
-    width: 40px;
-    background: var(--gold);
-    border: none;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.search-btn svg {
-    width: 17px;
-    height: 17px;
-}
-
-/* ---------- header ---------- */
 .location-row {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    gap: 12px;
 }
 
 .location-name {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     letter-spacing: 0.2px;
 }
@@ -129,19 +363,21 @@ body::before {
 .location-date {
     font-size: 12px;
     color: var(--cloud-dim);
+    white-space: nowrap;
 }
 
-/* ---------- hero ---------- */
 .hero {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 22px;
+    margin-top: 24px;
 }
 
-.hero-icon svg {
-    width: 92px;
-    height: 92px;
+.hero-icon svg,
+.hero-icon img {
+    width: 100px;
+    height: 100px;
+    filter: drop-shadow(0 8px 22px rgba(232, 169, 76, 0.25));
 }
 
 .hero-temp {
@@ -150,25 +386,41 @@ body::before {
 
 .temp-value {
     font-family: 'Fraunces', serif;
-    font-size: 76px;
+    font-size: 80px;
     font-weight: 400;
     line-height: 0.9;
     letter-spacing: -2px;
 }
 
 .temp-value sup {
-    font-size: 32px;
+    font-size: 34px;
     top: -0.5em;
     font-weight: 400;
 }
 
 .condition-text {
+    margin-top: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--cloud-dim);
+    text-transform: capitalize;
+}
+
+.temp-range {
     margin-top: 6px;
-    font-size: 14px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    font-size: 12px;
     color: var(--cloud-dim);
 }
 
-/* ---------- stats row ---------- */
+.temp-range b {
+    color: var(--cloud);
+    font-weight: 600;
+}
+
+/* stats */
 .stats-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -179,32 +431,110 @@ body::before {
     border-bottom: 1px solid var(--hairline);
 }
 
+.stat {
+    text-align: center;
+}
+
+.stat:not(:last-child) {
+    border-right: 1px solid var(--hairline);
+}
+
 .stat-label {
-    font-size: 10px;
+    font-size: 11px;
     color: var(--cloud-dim);
     letter-spacing: 0.3px;
 }
 
 .stat-value {
-    font-size: 15px;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+/* details */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.detail {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    background: rgba(245, 241, 232, 0.05);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    padding: 12px 13px;
+    min-width: 0;
+}
+
+.detail-icon {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+    color: var(--gold);
+}
+
+.detail-label {
+    font-size: 11px;
+    color: var(--cloud-dim);
+}
+
+.detail-value {
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* meta */
+.meta-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+    font-size: 12px;
+    color: var(--cloud-dim);
+}
+
+.meta-row b {
+    color: var(--cloud);
     font-weight: 600;
-    margin-top: 3px;
 }
 
 .empty-hint {
     text-align: center;
     font-size: 12px;
     color: var(--cloud-dim);
-    padding: 4px 0 24px;
+    padding: 18px 0 22px;
 }
 
 @media (max-width: 400px) {
+    .card {
+        padding: 22px 16px 4px;
+    }
+
     .temp-value {
         font-size: 64px;
     }
 
-    .hero-icon svg {
-        width: 76px;
-        height: 76px;
+    .hero-icon svg,
+    .hero-icon img {
+        width: 78px;
+        height: 78px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::after {
+        animation: none !important;
+    }
+
+    * {
+        transition: none !important;
     }
 }
